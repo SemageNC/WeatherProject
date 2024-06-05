@@ -3,7 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/image">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_margin="30dp"
+        android:id="@+id/addressSection">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/location_icon" />
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Address"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/tempSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/addressSection">
+
+            <TextView
+                android:id="@+id/temperature_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temp: --°C"
+                android:textSize="40sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+
+
 
     <TextView
         android:id="@+id/latitude_longitude"
@@ -12,27 +63,22 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="Latitude, Longitude"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/tempSection"/>
 
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/latitude_longitude"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:text="Address"
-        android:textSize="18sp" />
+
 
     <TextView
         android:id="@+id/system_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/address"
+        android:layout_below="@id/latitude_longitude"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="System Time"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/white" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/weather_card"
@@ -51,6 +97,78 @@
             android:layout_height="wrap_content"
             android:text="Weather Info"
             android:textSize="18sp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/humSection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:layout_margin="4dp"
+        android:background="#80000000"
+        android:backgroundTint="#cccccc"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/weather_card">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/icon_humidity" />
+
+            <TextView
+                android:id="@+id/humidity_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Humidity: --%"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        android:layout_margin="4dp"
+        android:background="#80000000"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="#cccccc"
+        android:layout_below="@id/humSection"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/icon_feels_like" />
+
+            <TextView
+                android:id="@+id/description_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description: --"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

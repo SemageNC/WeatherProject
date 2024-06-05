@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
@@ -37,12 +38,16 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final String TAG = "MainActivity";
-    private static final String API_KEY = "fc6079f2584eda5d0aa441f03c5dedaf"; // Your OpenWeatherMap API key
+    private static final String API_KEY = "9b42abb37074595ab4d922c1ae3c6786"; // Your OpenWeatherMap API key
     private FusedLocationProviderClient fusedLocationClient;
     private TextView latitudeLongitudeTextView;
     private TextView addressTextView;
     private TextView systemTimeTextView;
     private TextView weatherInfoTextView;
+
+    private TextView temperatureInfoTextView;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
         addressTextView = findViewById(R.id.address);
         systemTimeTextView = findViewById(R.id.system_time);
         weatherInfoTextView = findViewById(R.id.weather_info);
+        temperatureInfoTextView = findViewById(R.id.temperature_info);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        handler = new Handler(Looper.getMainLooper());
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -64,14 +71,23 @@ public class MainActivity extends AppCompatActivity {
             fetchLocation();
         }
 
-        // Update system time
+        // Update system time in real-time
         updateSystemTime();
+
+        // Schedule weather data updates every minute
+        scheduleWeatherUpdates();
     }
 
     private void updateSystemTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        String currentTime = sdf.format(new Date());
-        systemTimeTextView.setText(currentTime);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                String currentTime = sdf.format(new Date());
+                systemTimeTextView.setText(currentTime);
+                handler.postDelayed(this, 1000); // Update every second
+            }
+        });
     }
 
     private void fetchLocation() {
@@ -148,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                             weatherResponse.main.humidity,
                             weatherResponse.weather.get(0).description);
                     weatherInfoTextView.setText(weatherInfo);
+                    String temperatureInfo = String.format(Locale.getDefault(), "%.1f°C", weatherResponse.main.temp);
+                    temperatureInfoTextView.setText(temperatureInfo);
                     Log.d(TAG, "Weather Info: " + weatherInfo);
                 } else {
                     weatherInfoTextView.setText("Failed to get weather info");
@@ -161,6 +179,25 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "API call failed", t);
             }
         });
+    }
+
+    private void scheduleWeatherUpdates() {
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                fetchLocation(); // Update location and weather info
+                handler.postDelayed(this, 60000); // Schedule next update in 1 minute
+            }
+        };
+        handler.post(runnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
     }
 
     @Override
